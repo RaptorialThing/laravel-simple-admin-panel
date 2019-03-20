@@ -5,6 +5,12 @@ A lot of admin panels already exist, but I couldn't find any that did not includ
 # Introduction
 This is a very simple Admin panel for your laravel website, which you can use as a base to build upon without needing to browse for hours through source code.
 
+# Features
+- User creation / edit / deletion
+- Role creation / edit / suppression
+- Role assignment
+- Access control based on these roles
+
 # Getting started
 
 Simply clone the repository, then run
