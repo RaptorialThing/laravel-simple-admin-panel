@@ -7,7 +7,15 @@ This is a very simple Admin panel for your laravel website, which you can use as
 
 # Getting started
 
-Simply clone the repository, then run php artisan:migrate and php artisan db:seed and you are set. db:seed will create a user admin@admin.com / with password secret_password which you can use to login to the admin interface located at /admin
+Simply clone the repository, then run
+```
+php artisan:migrate
+```
+and 
+```
+php artisan db:seed
+```
+and you are set. db:seed will create a user admin@admin.com / with password secret_password which you can use to login to the admin interface located at /admin
 
 Everything is the same as the base laravel install except that admin panel and the user management functions.
 
