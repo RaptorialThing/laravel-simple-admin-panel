@@ -11,6 +11,9 @@ This is a very simple Admin panel for your laravel website, which you can use as
 - Role assignment
 - Access control based on these roles
 
+![description](media/screenshot.png)
+
+
 # Getting started
 
 Simply clone the repository, then run
@@ -29,10 +32,11 @@ You can use Route::group(['middleware' => 'admin:yourrole1,yourrole2'] from the 
 
 # Content
 
-Middleware/Admin.php: Middleware "admin" to restrict access to routes
-Controllers/UserController & Controllers/RoleController: Controllers that handle the admin panel
-Routes/web.php: The default route file with the addition of new routes for the admin panel
-view/admin: The blade views for the admin interface
+- Middleware/Admin.php: Middleware "admin" to restrict access to routes
+- Role, User, UserRoleMapping: Models for the roles
+- Controllers/UserController & Controllers/RoleController: Controllers that handle the admin panel
+- Routes/web.php: The default route file with the addition of new routes for the admin panel
+- view/admin: The blade views for the admin interface
 
 # Integrating into an existing project
 If you just want to add the admin panel,
