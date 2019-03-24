@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Role, App\UserRoleMapping;
 use Illuminate\Http\Request;
 use DB, Redirect, QueryException, Session;
 
@@ -23,18 +24,13 @@ class RoleController extends Controller
     */
     public function createRole(Request $request)
     {
-    	try {
-    		DB::table('available_roles')->insert(['role' => $request["rolename"],
-    			'description' => $request["description"]]);
-    	}
-    	catch (\Illuminate\Database\QueryException $e)
-    	{
-    		return Redirect::back()->withErrors("Error creating role");
-    	};
+        $role = new Role;
+        $role->role = $request->rolename;
+        $role->description = $request->description;
+        $role->save();
+        Session::flash('success', "Role created");
 
-    	Session::flash('success', "Role created");
-
-    	return Redirect::back();
+        return Redirect::back();
     }
 
     /**
@@ -42,35 +38,25 @@ class RoleController extends Controller
     */
     public function deleteRole(Request $request)
     {
-    	try {
-    		DB::table('current_roles')->where('user_role', $request->id)->delete();
-    		DB::table('available_roles')->where('id', $request->id)->delete();
-    	}
-    	catch (\Illuminate\Database\QueryException $e)
-    	{
-    		return Redirect::back()->withErrors("Error deleting role");
-    	}
-    	Session::flash('success', "Role deleted");
-    	return Redirect::back();
-    }
+      UserRoleMapping::where('user_role', $request->id)->delete();
+      $role = Role::find($request->id);
+      $role->delete();
+      Session::flash('success', "Role deleted");
+
+      return Redirect::back();
+  }
 
     /**
     * Updates a role
     */
     public function updateRole(Request $request)
     {
-    	print_r($request->id);
-    	try {
-    	DB::table('available_roles')
-            ->where('id', $request->id)
-            ->update(['description' => $request->description,
-        			'role' => $request->role]);
-		}
-		catch (\Illuminate\Database\QueryException $e)
-    	{
-    		return Redirect::back()->withErrors("Error modifying role");
-    	}
-    	Session::flash('success', "Role deleted");
-    	return Redirect::back();
+        $role = Role::find($request->id);
+        $role->description = $request->description;
+        $role->role = $request->role;
+        $role->save();
+
+        Session::flash('success', "Role updated");
+        return Redirect::back();
     }
 }

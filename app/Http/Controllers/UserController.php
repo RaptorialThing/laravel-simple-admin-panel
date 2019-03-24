@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
+use App\Role, App\UserRoleMapping;
 use Illuminate\Http\Request;
 use DB, Redirect, QueryException, Session;
 
@@ -23,8 +25,11 @@ class UserController extends Controller
     */
     public function index()
     {
-        $data =  ["users" => DB::table('users')->select("name", "email", "id")->get(),
-        "roles" =>  DB::table('available_roles')->select("role", "id", "description")->get()];
+        $data =  [
+            "users" => User::select("name", "email", "id")->get(),
+            "roles" =>  Role::select("role", "id", "description")->get()
+        ];
+
         return view('admin/main')->with($data);
     }
     /**
@@ -32,15 +37,9 @@ class UserController extends Controller
     */
     public function destroy(Request $request)
     {
-        try {
-            DB::table('users')->where('id', $request->userId)->delete();
-        }
-        catch (\Illuminate\Database\QueryException $e)
-        {
-            return Redirect::back()->withErrors("Error deleting user");
-        };
-
+        User::destroy($request->userId);
         Session::flash('success', "User deleted");
+
         return redirect()->back();
     }
     /**
@@ -48,10 +47,17 @@ class UserController extends Controller
     */
     public function edit(Request $request)
     {
+        $roles =  UserRoleMapping::first("user_id", "name", "role", "description", "email", "user_role", "users.id")
+        ->leftJoin('users', 'current_roles.user_id', '=', 'users.id')
+        ->leftJoin('available_roles', 'current_roles.user_role', '=', 'available_roles.id')
+        ->where('user_id', $request->userId)->get();
+        $available_roles = Role::select("id", "role", "description")->get();
 
-        $roles =  DB::table('current_roles')->select("user_id", "name", "role", "description", "email", "user_role", "users.id")->leftJoin('users', 'current_roles.user_id', '=', 'users.id')->leftJoin('available_roles', 'current_roles.user_role', '=', 'available_roles.id')->where('user_id', $request->userId)->get();
-        $available_roles = DB::table('available_roles')->select("id", "role", "description")->get();
-        return view('admin/edit')->with(["roles" => $roles, "availableRoles" => $available_roles, "userId" => $request->userId]);
+        return view('admin/edit')->with([
+            "roles" => $roles, 
+            "availableRoles" => $available_roles, 
+            "userId" => $request->userId,
+        ]);
     }
 
     /** 
@@ -59,16 +65,13 @@ class UserController extends Controller
     */
     public function addRoleToUser(Request $request)
     {
-       try {
-        DB::table('current_roles')->insert(['user_role' => $request->roleToAdd, 
-            'user_id' => $request->userId]);
-    }
-    catch (\Illuminate\Database\QueryException $e)
-    {
-     return Redirect::back()->withErrors("Error adding role to user");
-     }
-     Session::flash('success', "Role added to user");
-     return Redirect::back();
+        $userRole = new UserRoleMapping;
+        $userRole->user_role = $request->roleToAdd;
+        $userRole->user_id = $request->userId;
+        $userRole->save();
+        Session::flash('success', "Role added to user");
+
+        return Redirect::back();
     }
 
     /** 
@@ -76,15 +79,10 @@ class UserController extends Controller
     */
     public function deleteRoleFromUser(Request $request)
     {
-       try {
-        DB::table('current_roles')->where('user_id', $request->userId)->where('user_role', $request->roleToRemove)->delete();
-    }
-    catch (\Illuminate\Database\QueryException $e)
-    {
-     return Redirect::back()->withErrors("Error deleting role from user");
-    }
-    Session::flash('success', "Role deleted from user");
-    return Redirect::back();
+        UserRoleMapping::where('user_id', $request->userId)->where('user_role', $request->roleToRemove)->delete();
+        Session::flash('success', "Role deleted from user");
+
+        return Redirect::back();
     }
 
     /**
@@ -93,18 +91,13 @@ class UserController extends Controller
     public function createUser(Request $request)
     {
         // Creates the user with "none" role and submitted info
-      try {
-        DB::table('users')->insert(['email' => $request->email, 
-         'name' => $request->username,
-         'password' => bcrypt($request->password)]);
-        }
-
-        catch (\Illuminate\Database\QueryException $e)
-        {
-            return Redirect::back()->withErrors("Error creating user");
-        };
-
+        $user = new User;
+        $user->email = $request->email;
+        $user->name = $request->username;
+        $user->password = bcrypt($request->password);
+        $user->save();
         Session::flash('success', "User created");
+        
         return Redirect::back();
     }
 }

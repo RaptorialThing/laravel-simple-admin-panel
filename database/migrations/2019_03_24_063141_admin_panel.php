@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddAdminRolesToUserTable extends Migration
+class AdminPanel extends Migration
 {
     /**
      * Run the migrations.
@@ -21,20 +21,16 @@ class AddAdminRolesToUserTable extends Migration
 
         Schema::create('current_roles', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('user_id')->references('id')->on('users');
-            $table->integer('user_role')->references('id')->on('available_roles');
+            $table->unique(['user_id', 'user_role']);
+            $table->integer('user_role')->unsigned();
+            $table->bigInteger('user_id')->unsigned();
         });
 
         DB::table('available_roles')->insert(
-        array(
-            'role' => 'admin',
-            'description' => 'Every permission',
-        ));
-        DB::table('available_roles')->insert(
-        array(
-            'role' => 'none',
-            'description' => 'Default role',
-        ));
+            array(
+                'role' => 'admin',
+                'description' => 'Every permission',
+            ));
     }
 
     /**

@@ -46,6 +46,10 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        if ($request->is('admin/*') && config('app.debug') == false) {
+            return redirect()->back()->withErrors(['An error has occured.']);
+        }
+
         return parent::render($request, $exception);
     }
 }
