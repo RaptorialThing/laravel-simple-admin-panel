@@ -11,7 +11,7 @@ This is a very simple Admin panel for your laravel website, which you can use as
 - Role assignment
 - Access control based on these roles
 
-![description](media/screenshot.png)
+![description](media/screenshot.PNG)
 
 
 # Getting started
