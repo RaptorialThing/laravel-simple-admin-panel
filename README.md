@@ -1,6 +1,9 @@
 # laravel-simple-admin-panel
 A super simple pure PHP admin panel for laravel (current version 5.8), wihout any additionnal dependencies required (default laravel install). Allows user management and role creation.
+
 A lot of admin panels already exist, but I couldn't find any that did not include crazy fancy features or used non default packages.
+
+After install and log-in with the authorized user, panel is located on /admin
 
 # Introduction
 This is a very simple Admin panel for your laravel website, which you can use as a base to build upon without needing to browse for hours through source code.
