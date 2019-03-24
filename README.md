@@ -46,6 +46,7 @@ If you just want to add the admin panel,
 - Run the migration (or at least the add_admin_roles one)
 - Add the views in resources/views/admin
 - Add the Admin middleware
+- Add the Models
 - Add the two controllers
 
 And you should be set!
