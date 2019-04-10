@@ -36,17 +36,22 @@ You can use Route::group(['middleware' => 'admin:yourrole1,yourrole2'] from the 
 # Content
 
 - Middleware/Admin.php: Middleware "admin" to restrict access to routes
-- Role, User, UserRoleMapping: Models for the roles
+- Models/(Role, User, UserRoleMapping): Models for the roles
 - Controllers/UserController & Controllers/RoleController: Controllers that handle the admin panel
 - Routes/web.php: The default route file with the addition of new routes for the admin panel
 - view/admin: The blade views for the admin interface
+- Http/Request/* The validations
 
 # Integrating into an existing project
 If you just want to add the admin panel,
-- Run the migration (or at least the add_admin_roles one)
-- Add the views in resources/views/admin
-- Add the Admin middleware
-- Add the Models
-- Add the two controllers
+- Run the migrations (or at least the add_admin_roles one)
+- Add the above files
+- add the Admin middleware in the routemiddleware  in the Kernel.php
+```
+    protected $routeMiddleware = [
+        ...
+        'admin' => \App\Http\Middleware\Admin::class,
+    ]
+```
 
 And you should be set!
