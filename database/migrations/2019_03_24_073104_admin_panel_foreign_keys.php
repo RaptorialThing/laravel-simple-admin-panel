@@ -15,7 +15,7 @@ class AdminPanelForeignKeys extends Migration
     {
         Schema::table('current_roles', function($table) {
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('user_role')->references('id')->on('available_roles')->onDelete('cascade');
+            $table->foreign('role_id')->references('id')->on('available_roles')->onDelete('cascade');
         });
     }
 
@@ -26,7 +26,7 @@ class AdminPanelForeignKeys extends Migration
      */
     public function down()
     {
-        $table->dropForeign(['user_role']);
         $table->dropForeign(['user_id']);
+        $table->dropForeign(['role_id']);
     }
 }

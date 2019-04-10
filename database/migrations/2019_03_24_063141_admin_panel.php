@@ -21,8 +21,8 @@ class AdminPanel extends Migration
 
         Schema::create('current_roles', function (Blueprint $table) {
             $table->increments('id');
-            $table->unique(['user_id', 'user_role']);
-            $table->integer('user_role')->unsigned();
+            $table->unique(['user_id', 'role_id']);
+            $table->integer('role_id')->unsigned();
             $table->bigInteger('user_id')->unsigned();
         });
 

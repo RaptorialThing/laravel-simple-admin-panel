@@ -20,7 +20,7 @@
 			<form method="POST" action="/admin/deleteRoleFromUser">
 				@csrf
 				<input type="hidden" name="userId" value="{{ $userId }}">
-				<input type="hidden" name="roleToRemove" value="{{ $role->user_role }}">
+				<input type="hidden" name="roleToRemove" value="{{ $role->role_id }}">
 				<button type="submit" class="btn btn-danger">Remove role from user</button>
 			</form>
 		@endforeach

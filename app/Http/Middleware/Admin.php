@@ -23,8 +23,9 @@ class Admin
         };
 
         // Check if the user has required role
-        if ($roles == null || $this->hasRole($roles))
+        if ($roles == null || $this->hasRole($roles)) {
             return $next($request);
+        }
 
         // Else redirect to home
         return redirect('/');
@@ -36,7 +37,7 @@ class Admin
     public function getRoles()
     {
         $id =  Auth::id();
-        $roles =  DB::table('current_roles')->join('available_roles', 'current_roles.user_role', '=', 'available_roles.id')->where('user_id', $id)->get();
+        $roles = \App\Models\User::find($id)->roles;
 
         return $roles;
     }
@@ -49,8 +50,9 @@ class Admin
 
         foreach ($checkAgainst as $role) {
             foreach ($userRoles as $usrRole) {
-                if ($usrRole->role == $role)
+                if ($usrRole->role == $role) {
                     return true;
+                }
             }
         }
 

@@ -2,13 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Role, App\UserRoleMapping;
+use App\Models\Role;
+use App\Models\UserRoleMapping;
 use Illuminate\Http\Request;
-use DB, Redirect, QueryException, Session;
+use App\Http\Requests\RoleCreationRequest;
+use DB;
+use Redirect;
+use QueryException;
+use Session;
 
 class RoleController extends Controller
 {
-	protected $redirectTo = '/';
+    protected $redirectTo = '/';
 
     /**
      * Create a new controller instance.
@@ -20,12 +25,14 @@ class RoleController extends Controller
     }
 
     /**
-    * Creates a new role
-    */
-    public function createRole(Request $request)
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create(RoleCreationRequest $request)
     {
         $role = new Role;
-        $role->role = $request->rolename;
+        $role->role = $request->role;
         $role->description = $request->description;
         $role->save();
         Session::flash('success', "Role created");
@@ -33,30 +40,36 @@ class RoleController extends Controller
         return Redirect::back();
     }
 
-    /**
-    * Deletes an existing role
-    */
-    public function deleteRole(Request $request)
-    {
-      UserRoleMapping::where('user_role', $request->id)->delete();
-      $role = Role::find($request->id);
-      $role->delete();
-      Session::flash('success', "Role deleted");
-
-      return Redirect::back();
-  }
 
     /**
-    * Updates a role
-    */
-    public function updateRole(Request $request)
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(RoleCreationRequest $request, $id)
     {
-        $role = Role::find($request->id);
+        $role = Role::find($id);
         $role->description = $request->description;
         $role->role = $request->role;
         $role->save();
 
         Session::flash('success', "Role updated");
+        return Redirect::back();
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        Role::destroy($id);
+        Session::flash('success', "Role deleted");
+
         return Redirect::back();
     }
 }

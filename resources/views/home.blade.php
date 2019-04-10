@@ -13,8 +13,10 @@
                             {{ session('status') }}
                         </div>
                     @endif
-
-                    You are logged in!
+                    You are logged in! 
+                    @if (session('allroles'))
+                        <a href="/admin"> Access admin panel</a>
+                    @endif
                 </div>
             </div>
         </div>

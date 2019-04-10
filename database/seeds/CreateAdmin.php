@@ -23,7 +23,7 @@ class CreateAdmin extends Seeder
         // Gives the admin role to our first admin user
         DB::table('current_roles')->insert([
             'user_id' => DB::getPdo()->lastInsertId(),
-            'user_role' => $role->id,
+            'role_id' => $role->id,
         ]);
 
     }

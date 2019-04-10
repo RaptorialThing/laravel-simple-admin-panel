@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,4 +12,11 @@ class UserRoleMapping extends Model
     protected $table = 'current_roles';
 
     public $timestamps = false;
+
+
+
+    public function roles()
+    {
+        return $this->belongsToMany('App\Models\User');
+    }
 }

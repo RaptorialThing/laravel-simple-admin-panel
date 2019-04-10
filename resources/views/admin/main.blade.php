@@ -2,11 +2,11 @@
 @section('content')
 
 <div class="row mt-2"><h1>Create user</h1></div>
-<form method="POST" action="/admin/createUser">
+<form method="GET" action="/admin/create">
     @csrf
     <div class="form-group">
         <label for="name">Name</label>
-        <input type="text" class="form-control" name="username" id="name" placeholder="Enter username">
+        <input type="text" class="form-control" name="name" id="name" placeholder="Enter username">
     </div>
     <div class="form-group">
         <label for="email">Email address</label>
@@ -45,11 +45,11 @@
 </table>
 
 <div class="row mt-2"><h1>Create role</h1></div>
-<form method="POST" action="/admin/createRole">
+<form method="GET" action="/role/create">
     @csrf
     <div class="form-group">
         <label for="role">Role name</label>
-        <input type="text" class="form-control" id="role" name="rolename" placeholder="Enter new role name">
+        <input type="text" class="form-control" id="role" name="role" placeholder="Enter new role name">
         <label for="description">Description</label>
 
         <textarea class="form-control" id="description" name="description" placeholder="Enter role description"></textarea>   
@@ -64,14 +64,16 @@
         <th>Role</th><th>Description</th><th>Modify</th><th>Delete</th></thead>
         @foreach ($roles as $role)
             <tr>
-            <form method="post" action="/admin/updateRole/{{ $role->id }}">
+            <form method="POST" action="/role/{{ $role->id }}">
+            <input type="hidden" name="_method" value="PUT"/>
             @csrf
             <td><input type="text" class="form-control" name="role" value="{{ $role->role }}" /></td>
             <td><textarea type="text" class="form-control" name="description">{{$role->description}}</textarea></td>
             <td>
             <button type="submit" class="btn btn-success">Modify</button></td>
             </form>
-            <td><form method="GET" action="/admin/deleteRole/{{ $role->id }}">
+            <td><form method="POST" action="/role/{{ $role->id }}">
+                <input type="hidden" name="_method" value="DELETE"/>
                 @csrf
                 <button type="submit" class="btn btn-danger">Delete</button></form>
             </form></td>

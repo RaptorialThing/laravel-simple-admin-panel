@@ -20,15 +20,15 @@ Route::get('/', function () {
 
 Auth::routes();
 
+
+// Check against middleware admin that we have the role admin; all below routes require it
 Route::group(['middleware' => 'admin:admin'], function () {
-	Route::resource('admin', 'UserController');
-	Route::post('/admin/createUser', 'UserController@createUser');
-	Route::post('/admin/createRole', 'RoleController@createRole');
-	Route::get('/admin/deleteRole/{id}', 'RoleController@deleteRole');
-	Route::get('/admin/editRole/{id}', 'RoleController@editRole');
-	Route::post('/admin/addRoleToUser', 'UserController@addRoleToUser');
-	Route::post('/admin/deleteRoleFromUser', 'UserController@deleteRoleFromUser');
-	Route::post('/admin/updateRole/{id}', 'RoleController@updateRole');
+    // Routes for Users & Role creation
+	Route::resource('admin', 'UserController', ['only' => ['index', 'destroy', 'edit', 'create']]);
+    Route::resource('role', 'RoleController', ['only' => ['create', 'destroy', 'update']]);
+    // Routes for user to role mapping
+    Route::post('/admin/addRoleToUser', 'UserController@addRoleToUser');
+    Route::post('/admin/deleteRoleFromUser', 'UserController@deleteRoleFromUser');
 });
 
 Route::get('/home', 'HomeController@index')->name('home');
